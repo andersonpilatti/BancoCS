@@ -106,6 +106,36 @@ namespace ATM
             Console.Write("Informe o valor a depositar:");
 
         }
+
+        static void Extrato()
+        {
+            Header("EXTRATO");
+
+            if (movimentacao.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Não há movimentacao para exibir, pressione enter para continuar");
+            }
+
+            foreach (var item in movimentacao)
+            {
+                Console.WriteLine("{0:hh:mm} {1:N2} {2}", item.Data, item.Valor, item.Tipo);
+            }
+
+            decimal credito = movimentacao
+                                .Where(w => w.Tipo == "C")
+                                .Sum(s => s.Valor);
+
+            decimal debito = movimentacao
+                                .Where(w => w.Tipo == "D")
+                                .Sum(s => s.Valor);
+
+            Console.WriteLine("Seu saldo é {0:N2}", credito - debito);
+
+            Console.ReadLine();
+            return;
+        }
+
         static void Main(string[] args)
         {
             int opcao = 0;
@@ -131,6 +161,10 @@ namespace ATM
                             Saque();
                             break;
 
+                        case 3:
+                            Extrato();
+                            break;
+
                         default:
                             break;
                     }
@@ -142,6 +176,9 @@ namespace ATM
                 }
 
             } while (opcao > 0);
+
+            Console.WriteLine("Obrigado por usar nossos serviços");
+            Console.ReadLine();
         }
     }
 }
